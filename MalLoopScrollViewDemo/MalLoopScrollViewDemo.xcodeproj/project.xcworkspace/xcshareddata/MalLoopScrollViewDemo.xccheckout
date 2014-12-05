@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>23EE6743-354B-41FF-9ACB-53E020BBB3DF</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MalLoopScrollViewDemo</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>BF341BAD84730FEECAC3099A34BF18E4358B05FB</key>
+		<string>https://github.com/tiantiankaixin/MALLoopScrollView.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>MalLoopScrollViewDemo/MalLoopScrollViewDemo.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>BF341BAD84730FEECAC3099A34BF18E4358B05FB</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/tiantiankaixin/MALLoopScrollView.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>BF341BAD84730FEECAC3099A34BF18E4358B05FB</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>BF341BAD84730FEECAC3099A34BF18E4358B05FB</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MALLoopScrollView</string>
+		</dict>
+	</array>
+</dict>
+</plist>
