@@ -12,11 +12,12 @@
 #define Height(view)  CGRectGetHeight(view.frame)
 @implementation LoopScrollView
 
-+ (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame
++ (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame setImageBlock:(void (^)(UIButton *, NSString *))setImageBlock
 {
     LoopScrollView *loop = [[LoopScrollView alloc] initWithFrame:frame];
     loop.imageArray = [NSMutableArray arrayWithArray:imageArray];
     loop.contentArray = [[NSMutableArray alloc] init];
+    loop.setImageBlock = setImageBlock;
     [loop configueScrollView];
     return loop;
 }
@@ -121,8 +122,16 @@
     for(int i = 0; i < 3; i++){
     
         UIButton *btn = [self.contentArray objectAtIndex:i];
-        NSString *imagePath = [self imagePathWithImageName:[imageArray objectAtIndex:i]];
-        [btn setImage:[UIImage imageWithContentsOfFile:imagePath] forState:(UIControlStateNormal)];
+        NSString *imageName = [imageArray objectAtIndex:i];
+        NSString *imagePath = [self imagePathWithImageName:imageName];
+        if (self.setImageBlock == nil) {
+            
+            [btn setImage:[UIImage imageWithContentsOfFile:imagePath] forState:(UIControlStateNormal)];
+        }
+        else{
+        
+            self.setImageBlock(btn,imageName);
+        }
     }
 }
 
@@ -196,9 +205,9 @@
     [self.scrollView setContentOffset:CGPointMake(2 * Width(self), 0) animated:YES];
 }
 
-- (void)startAutoScrollWithDuration:(CGFloat)duration
+- (void)startAutoScrollWithInterval:(CGFloat)interval
 {
-    self.autoScrollTimer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(beginAutoScroll) userInfo:nil repeats:YES];
+    self.autoScrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(beginAutoScroll) userInfo:nil repeats:YES];
 }
 
 - (void)stopAutoScroll
@@ -229,6 +238,12 @@
     pageControlFrame.origin.x = Width(self) - right - Width(self.pageControl);
     pageControlFrame.origin.y = Height(self) - bottom - Height(self.pageControl);
     self.pageControl.frame = pageControlFrame;
+}
+
+- (void)releaseSelf
+{
+    [self stopAutoScroll];
+    [self removeFromSuperview];
 }
 
 - (void)dealloc

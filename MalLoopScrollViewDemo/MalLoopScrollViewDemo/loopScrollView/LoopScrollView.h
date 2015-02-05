@@ -15,6 +15,9 @@
 @end
 
 #define MainScreen_Size [UIScreen mainScreen].bounds.size
+
+typedef void(^SetImageBlock)(UIButton *btn,NSString *imageName);
+
 @interface LoopScrollView : UIView<UIScrollViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -25,11 +28,12 @@
 @property (nonatomic, strong) NSTimer *autoScrollTimer;
 @property (nonatomic, strong) NSMutableArray *titleLabelArray;
 @property (nonatomic, strong) NSMutableArray *titleArray;
-@property (nonatomic, strong) id<LoopScrollViewDelegate> delegate;
+@property (nonatomic, weak) id<LoopScrollViewDelegate> delegate;
+@property (nonatomic, copy) SetImageBlock setImageBlock;
 
-+ (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame;
++ (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame setImageBlock:(void(^)(UIButton *btn,NSString *imageName))setImageBlock;
 
-- (void)startAutoScrollWithDuration:(CGFloat)duration;
+- (void)startAutoScrollWithInterval:(CGFloat)interval;
 - (void)stopAutoScroll;
 
 - (void)setTitleWithTitleArray:(NSArray *)titleArray Frame:(CGRect)frame textColor:(UIColor *)textColor fontSize:(CGFloat)fontSize;
@@ -40,4 +44,7 @@
 //pageCntrol距离 上 右边界的距离
 - (void)setPageControlPositionTop:(CGFloat)top left:(CGFloat)left;
 - (void)setPageControlPositionBottom:(CGFloat)bottom right:(CGFloat)right;
+
+//释放自己
+- (void)releaseSelf;
 @end
