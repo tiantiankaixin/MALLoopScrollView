@@ -27,7 +27,9 @@
 {
     self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
     [self addSubview:self.scrollView];
+    self.isLoop = YES;
     self.scrollView.pagingEnabled = YES;
+    self.scrollView.bounces = NO;
     self.scrollView.delegate = self;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
@@ -144,9 +146,33 @@
     }
 }
 
+#pragma mark - scrollView delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGFloat x = scrollView.contentOffset.x;
+    if (!self.isAutoLoop)
+    {
+        if (!self.isLoop) {
+            
+            NSInteger currentIndex = self.currentIndex;
+            if (currentIndex == 0)
+            {
+                if (x < Width(self))
+                {
+                    scrollView.contentOffset = CGPointMake(Width(self), 0);
+                    return;
+                }
+            }
+            else if(currentIndex == self.imageArray.count - 1)
+            {
+                if (x > Width(self))
+                {
+                    scrollView.contentOffset = CGPointMake(Width(self), 0);
+                    return;
+                }
+            }
+        }
+    }
     if (x == 2 * Width(self)) {
         
         [self scrollToNextPage:YES];
@@ -196,6 +222,10 @@
         [self setContentTitleWithArray:nowTitleArray];
     }
     self.currentIndex = secondIndex;
+    if([self.delegate respondsToSelector:@selector(viewScrollToPage:)])
+    {
+        [self.delegate viewScrollToPage:self.currentIndex];
+    }
     self.pageControl.currentPage = self.currentIndex;
     self.scrollView.contentOffset = CGPointMake( Width(self),0);
 }
@@ -208,12 +238,14 @@
 - (void)startAutoScrollWithInterval:(CGFloat)interval
 {
     self.autoScrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(beginAutoScroll) userInfo:nil repeats:YES];
+    self.isAutoLoop = YES;
 }
 
 - (void)stopAutoScroll
 {
     [self.autoScrollTimer invalidate];
     self.autoScrollTimer = nil;
+    self.isAutoLoop = NO;
 }
 
 - (void)clickView:(UIButton *)sender

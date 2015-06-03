@@ -10,7 +10,9 @@
 
 @protocol LoopScrollViewDelegate <NSObject>
 
+@optional
 - (void)clickWithIndex:(NSInteger)index;
+- (void)viewScrollToPage:(NSInteger)currentIndex;
 
 @end
 
@@ -30,6 +32,8 @@ typedef void(^SetImageBlock)(UIButton *btn,NSString *imageName);
 @property (nonatomic, strong) NSMutableArray *titleArray;
 @property (nonatomic, weak) id<LoopScrollViewDelegate> delegate;
 @property (nonatomic, copy) SetImageBlock setImageBlock;
+@property (nonatomic, assign) BOOL isLoop;//是否可以循环滚动
+@property (nonatomic, assign) BOOL isAutoLoop;//是否正在自动循环滚动
 
 + (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame setImageBlock:(void(^)(UIButton *btn,NSString *imageName))setImageBlock;
 

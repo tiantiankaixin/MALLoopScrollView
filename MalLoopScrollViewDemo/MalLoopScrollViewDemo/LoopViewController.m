@@ -50,6 +50,7 @@
     [_loop setPageControlPositionBottom:-10 right:10];//设置pageControl的位置 //pageControl默认居中
     
     [self.view addSubview:_loop];
+    _loop.isLoop = NO;
     [_loop startAutoScrollWithInterval:3];
 }
 
@@ -63,6 +64,11 @@
 - (void)clickWithIndex:(NSInteger)index
 {
     NSLog(@"点击了第%ld张",(long)index + 1);
+}
+
+- (void)viewScrollToPage:(NSInteger)currentIndex
+{
+    NSLog(@"滑动到第%d张了",(int)currentIndex + 1);
 }
 
 - (void)dealloc
