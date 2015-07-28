@@ -7,9 +7,19 @@
 //
 
 #import "LoopScrollView.h"
+
+#define Width(view) view.frame.size.width
+#define Height(view) view.frame.size.height
 #define NSNumberValue(Integer) [NSNumber numberWithInteger:Integer]
-#define Width(view) CGRectGetWidth(view.frame)
-#define Height(view)  CGRectGetHeight(view.frame)
+
+static void *PanGesterContext = &PanGesterContext;
+
+@interface LoopScrollView()<UIGestureRecognizerDelegate>
+
+@property (nonatomic, assign) NSInteger pageCount;
+
+@end
+
 @implementation LoopScrollView
 
 + (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame setImageBlock:(void (^)(UIButton *, NSString *))setImageBlock
@@ -18,14 +28,21 @@
     loop.imageArray = [NSMutableArray arrayWithArray:imageArray];
     loop.contentArray = [[NSMutableArray alloc] init];
     loop.setImageBlock = setImageBlock;
+    loop.pageCount = imageArray.count;
     [loop configueScrollView];
     return loop;
+}
+
+- (void)setIsLoop:(BOOL)isLoop
+{
+    _isLoop = isLoop;
+    self.scrollView.isLoop = isLoop;
 }
 
 #pragma mark - 设置scrollview
 - (void)configueScrollView
 {
-    self.scrollView = [[UIScrollView alloc] initWithFrame:self.bounds];
+    self.scrollView = [[MyScrollView alloc] initWithFrame:self.bounds];
     [self addSubview:self.scrollView];
     self.isLoop = YES;
     self.scrollView.pagingEnabled = YES;
@@ -33,8 +50,20 @@
     self.scrollView.delegate = self;
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
-    self.scrollView.contentSize = CGSizeMake(3 * Width(self), 0);
-    self.scrollView.contentOffset = CGPointMake(Width(self),0);
+    self.scrollView.pageCount = self.pageCount;
+    self.scrollView.nowIndex = 0;
+    NSInteger sizeNumber = 3;
+    if (self.pageCount <= 1)
+    {
+        sizeNumber = 1;
+    }
+    self.scrollView.contentSize = CGSizeMake(sizeNumber * Width(self), 0);
+    CGFloat contentofSetX = Width(self);
+    if (self.pageCount == 1)
+    {
+        contentofSetX = 0;
+    }
+    self.scrollView.contentOffset = CGPointMake(contentofSetX,0);
     self.currentIndex = 0;
     [self setScrollViewContent];
 }
@@ -61,7 +90,7 @@
 {
     self.titleArray = [NSMutableArray arrayWithArray:titleArray];
     self.titleLabelArray = [[NSMutableArray alloc] init];
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < self.contentArray.count; i++){
     
         UIButton *btn = [self.contentArray objectAtIndex:i];
         [btn addTarget:self action:@selector(clickView:) forControlEvents:(UIControlEventTouchUpInside)];
@@ -80,8 +109,18 @@
 {
     NSMutableArray *contentImageArray = [[NSMutableArray alloc] init];
     [contentImageArray addObject:[self.imageArray objectAtIndex:[[array objectAtIndex:0] integerValue]]];
-    [contentImageArray addObject:[self.imageArray objectAtIndex:[[array objectAtIndex:1] integerValue]]];
-    [contentImageArray addObject:[self.imageArray objectAtIndex:[[array objectAtIndex:2] integerValue]]];
+    if (self.pageCount > 1)
+    {
+        [contentImageArray addObject:[self.imageArray objectAtIndex:[[array objectAtIndex:1] integerValue]]];
+        if (self.pageCount == 2)
+        {
+            [contentImageArray addObject:[self.imageArray objectAtIndex:[[array objectAtIndex:0] integerValue]]];
+        }
+    }
+    if (self.pageCount > 2)
+    {
+        [contentImageArray addObject:[self.imageArray objectAtIndex:[[array objectAtIndex:2] integerValue]]];
+    }
     return contentImageArray;
 }
 
@@ -89,8 +128,18 @@
 {
     NSMutableArray *contentTitleArray = [[NSMutableArray alloc] init];
     [contentTitleArray addObject:[self.titleArray objectAtIndex:[[array objectAtIndex:0] integerValue]]];
-    [contentTitleArray addObject:[self.titleArray objectAtIndex:[[array objectAtIndex:1] integerValue]]];
-    [contentTitleArray addObject:[self.titleArray objectAtIndex:[[array objectAtIndex:2] integerValue]]];
+    if (self.pageCount > 1)
+    {
+        [contentTitleArray addObject:[self.titleArray objectAtIndex:[[array objectAtIndex:1] integerValue]]];
+        if (self.pageCount == 2)
+        {
+            [contentTitleArray addObject:[self.titleArray objectAtIndex:[[array objectAtIndex:0] integerValue]]];
+        }
+    }
+    if (self.pageCount > 2)
+    {
+        [contentTitleArray addObject:[self.titleArray objectAtIndex:[[array objectAtIndex:2] integerValue]]];
+    }
     return contentTitleArray;
 }
 
@@ -100,7 +149,12 @@
     CGFloat selfHeight = CGRectGetHeight(self.frame);
     NSInteger firstIndex = [self validIndex:-1];
     NSMutableArray *contentImageArray = [self getNowImageArrayWithIndexArray:@[NSNumberValue(firstIndex),@0,@1]];
-    for (int i = 0; i < 3; i++) {
+    NSInteger loopCount = 3;
+    if (self.pageCount < 2)
+    {
+        loopCount = self.pageCount;
+    }
+    for (int i = 0; i < loopCount; i++) {
         
         UIButton *view = [[UIButton alloc] init];
         view.adjustsImageWhenHighlighted = NO;
@@ -121,7 +175,7 @@
 
 - (void)setContentViewImageWithArray:(NSMutableArray *)imageArray
 {
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < imageArray.count; i++){
     
         UIButton *btn = [self.contentArray objectAtIndex:i];
         NSString *imageName = [imageArray objectAtIndex:i];
@@ -139,7 +193,7 @@
 
 - (void)setContentTitleWithArray:(NSMutableArray *)titleArray
 {
-    for(int i = 0; i < 3; i++){
+    for(int i = 0; i < titleArray.count; i++){
         
         UILabel *label = [self.titleLabelArray objectAtIndex:i];
         label.text = [titleArray objectAtIndex:i];
@@ -149,39 +203,20 @@
 #pragma mark - scrollView delegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    CGFloat x = scrollView.contentOffset.x;
-    if (!self.isAutoLoop)
+    if (self.pageCount > 1)
     {
-        if (!self.isLoop) {
+        CGFloat x = scrollView.contentOffset.x;
+        if (x == 2 * Width(self)) {
             
-            NSInteger currentIndex = self.currentIndex;
-            if (currentIndex == 0)
-            {
-                if (x < Width(self))
-                {
-                    scrollView.contentOffset = CGPointMake(Width(self), 0);
-                    return;
-                }
-            }
-            else if(currentIndex == self.imageArray.count - 1)
-            {
-                if (x > Width(self))
-                {
-                    scrollView.contentOffset = CGPointMake(Width(self), 0);
-                    return;
-                }
-            }
+            [self scrollToNextPage:YES];
+        }
+        else if (x == 0){
+            
+            [self scrollToNextPage:NO];
         }
     }
-    if (x == 2 * Width(self)) {
-        
-        [self scrollToNextPage:YES];
-    }
-    else if (x == 0){
-    
-        [self scrollToNextPage:NO];
-    }
 }
+
 
 - (NSInteger)validIndex:(NSInteger)index
 {
@@ -197,6 +232,7 @@
     return index;
 }
 
+#pragma mark - next为YES则翻到下一页   NO翻到上一页
 - (void)scrollToNextPage:(BOOL)next
 {
     NSInteger firstIndex,secondIndex,thridIndex;
@@ -227,7 +263,8 @@
         [self.delegate viewScrollToPage:self.currentIndex];
     }
     self.pageControl.currentPage = self.currentIndex;
-    self.scrollView.contentOffset = CGPointMake( Width(self),0);
+    self.scrollView.nowIndex = self.currentIndex;
+    self.scrollView.contentOffset = CGPointMake(Width(self),0);
 }
 
 - (void)beginAutoScroll
@@ -237,8 +274,11 @@
 
 - (void)startAutoScrollWithInterval:(CGFloat)interval
 {
-    self.autoScrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(beginAutoScroll) userInfo:nil repeats:YES];
-    self.isAutoLoop = YES;
+    if (self.pageCount > 1)
+    {
+        self.autoScrollTimer = [NSTimer scheduledTimerWithTimeInterval:interval target:self selector:@selector(beginAutoScroll) userInfo:nil repeats:YES];
+        self.isAutoLoop = YES;
+    }
 }
 
 - (void)stopAutoScroll

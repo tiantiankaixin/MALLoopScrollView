@@ -36,6 +36,9 @@
     }
     CGFloat loopViewWidth = MainScreen_Size.width;
     CGFloat loopViewHeight = MainScreen_Size.width * (150.0 / 320);
+    
+    //NSArray *test = [NSArray arrayWithObjects:imageArray[0],imageArray[1], nil];//测试两张图片的情况
+    
     _loop = [LoopScrollView loopScrllViewWithImageArray:imageArray frame:CGRectMake(0, 64, loopViewWidth, loopViewHeight) setImageBlock:^(UIButton *btn, NSString *imageName) {
         
         //自定义设置图片方法   //如果是本地图片此参数可置为nil
@@ -50,8 +53,8 @@
     [_loop setPageControlPositionBottom:-10 right:10];//设置pageControl的位置 //pageControl默认居中
     
     [self.view addSubview:_loop];
-    _loop.isLoop = NO;
-    [_loop startAutoScrollWithInterval:3];
+    _loop.isLoop = NO;//是否可以循环滚动
+    //[_loop startAutoScrollWithInterval:3];// 开启自动滚动
 }
 
 #pragma mark - 一定要调用  否则viewcontroller 无法被释放

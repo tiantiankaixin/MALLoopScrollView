@@ -23,6 +23,7 @@
 		68012B481A316F1C0042151E /* img_04.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 68012B3F1A316F1C0042151E /* img_04.jpg */; };
 		68012B491A316F1C0042151E /* img_05.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 68012B401A316F1C0042151E /* img_05.jpg */; };
 		68012B4A1A316F1C0042151E /* newses.plist in Resources */ = {isa = PBXBuildFile; fileRef = 68012B411A316F1C0042151E /* newses.plist */; };
+		685E725C1B6724EA002A98FD /* MyScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 685E725B1B6724EA002A98FD /* MyScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,8 @@
 		68012B3F1A316F1C0042151E /* img_04.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_04.jpg; sourceTree = "<group>"; };
 		68012B401A316F1C0042151E /* img_05.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = img_05.jpg; sourceTree = "<group>"; };
 		68012B411A316F1C0042151E /* newses.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = newses.plist; sourceTree = "<group>"; };
+		685E725A1B6724EA002A98FD /* MyScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyScrollView.h; sourceTree = "<group>"; };
+		685E725B1B6724EA002A98FD /* MyScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +152,8 @@
 			children = (
 				68012B361A316F1C0042151E /* LoopScrollView.h */,
 				68012B371A316F1C0042151E /* LoopScrollView.m */,
+				685E725A1B6724EA002A98FD /* MyScrollView.h */,
+				685E725B1B6724EA002A98FD /* MyScrollView.m */,
 			);
 			path = loopScrollView;
 			sourceTree = "<group>";
@@ -278,6 +283,7 @@
 				68012B151A316EBB0042151E /* AppDelegate.m in Sources */,
 				68012B121A316EBB0042151E /* main.m in Sources */,
 				68012B421A316F1C0042151E /* LoopScrollView.m in Sources */,
+				685E725C1B6724EA002A98FD /* MyScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,6 +476,7 @@
 				68012B311A316EBB0042151E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		68012B321A316EBB0042151E /* Build configuration list for PBXNativeTarget "MalLoopScrollViewDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -478,6 +485,7 @@
 				68012B341A316EBB0042151E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

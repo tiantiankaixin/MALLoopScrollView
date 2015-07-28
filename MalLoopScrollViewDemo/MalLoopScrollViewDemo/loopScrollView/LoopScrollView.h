@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MyScrollView.h"
 
 @protocol LoopScrollViewDelegate <NSObject>
 
@@ -22,7 +23,7 @@ typedef void(^SetImageBlock)(UIButton *btn,NSString *imageName);
 
 @interface LoopScrollView : UIView<UIScrollViewDelegate>
 
-@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, strong) MyScrollView *scrollView;
 @property (nonatomic, strong) NSMutableArray *imageArray;
 @property (nonatomic,strong) NSMutableArray *contentArray;
 @property (nonatomic, assign) NSInteger currentIndex;
@@ -32,8 +33,15 @@ typedef void(^SetImageBlock)(UIButton *btn,NSString *imageName);
 @property (nonatomic, strong) NSMutableArray *titleArray;
 @property (nonatomic, weak) id<LoopScrollViewDelegate> delegate;
 @property (nonatomic, copy) SetImageBlock setImageBlock;
-@property (nonatomic, assign) BOOL isLoop;//是否可以循环滚动
-@property (nonatomic, assign) BOOL isAutoLoop;//是否正在自动循环滚动
+/**
+ *  是否可以循环滚动 YES: 可以(默认YES)   当开启自动滚动时无效
+ */
+@property (nonatomic, assign) BOOL isLoop;
+
+/**
+ *  是否开启了自动循环滚动  YES:是
+ */
+@property (nonatomic, assign) BOOL isAutoLoop;
 
 + (LoopScrollView *)loopScrllViewWithImageArray:(NSArray *)imageArray frame:(CGRect)frame setImageBlock:(void(^)(UIButton *btn,NSString *imageName))setImageBlock;
 
